@@ -1,0 +1,31 @@
+name: Android CI Build
+
+# This tells GitHub to run this script every time you push code to the main branch
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    # Sets up the Java environment needed for Android
+    - name: set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    # Gives GitHub permission to run the build file
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # Actually builds the app to make sure there are no errors
+    - name: Build with Gradle
+      run: ./gradlew build
